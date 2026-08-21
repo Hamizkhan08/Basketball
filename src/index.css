@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-canvas text-ink antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-soft-cloud;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-hairline rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-ink;
+  }
+}
+
+@layer components {
+  /* Nike Typography defaults */
+  .display-campaign {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 96px;
+    line-height: 0.9;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .heading-xl { @apply text-[32px] font-medium leading-[1.2]; }
+  .heading-lg { @apply text-[24px] font-medium leading-[1.2]; }
+  .heading-md { @apply text-[16px] font-medium leading-[1.75]; }
+  .body-md { @apply text-[16px] font-normal leading-[1.5]; }
+  .body-strong { @apply text-[16px] font-medium leading-[1.5]; }
+  .button-md { @apply text-[16px] font-medium leading-[1.5]; }
+  .caption-md { @apply text-[14px] font-medium leading-[1.5]; }
+  .caption-sm { @apply text-[12px] font-medium leading-[1.5]; }
+
+  /* Legacy overrides for dark theme */
+  .glass-card {
+    @apply bg-canvas border-none rounded-none;
+  }
+
+  .admin-card {
+    @apply bg-canvas border border-hairline rounded-none;
+  }
+
+  .score-btn {
+    @apply font-bold text-xl py-4 px-6 rounded-full transition-all duration-150
+      active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply bg-ink text-canvas font-medium px-8 py-3 rounded-full
+      transition-all duration-150 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-soft-cloud text-ink font-medium px-8 py-3 rounded-full
+      transition-all duration-150 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-danger {
+    @apply bg-sale text-canvas font-medium px-8 py-3 rounded-full
+      transition-all duration-150 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent hover:bg-soft-cloud text-ink font-medium px-8 py-3 rounded-full
+      transition-all duration-150 active:scale-95;
+  }
+
+  .input-field {
+    @apply bg-soft-cloud border border-transparent rounded-md px-4 py-2 text-ink
+      placeholder:text-zinc-500 focus:outline-none focus:border-ink focus:ring-1 focus:ring-ink
+      w-full transition-colors;
+  }
+
+  .select-field {
+    @apply bg-soft-cloud border border-transparent rounded-md px-4 py-2 text-ink
+      focus:outline-none focus:border-ink focus:ring-1 focus:ring-ink
+      w-full transition-colors;
+  }
+
+  .table-container {
+    @apply overflow-x-auto border-t border-hairline;
+  }
+
+  .data-table {
+    @apply w-full text-sm;
+  }
+
+  .data-table th {
+    @apply bg-canvas text-ink font-semibold px-4 py-3 text-left uppercase tracking-wider text-xs border-b border-hairline;
+  }
+
+  .data-table td {
+    @apply px-4 py-3 border-b border-hairline-soft bg-canvas text-ink;
+  }
+
+  .data-table tr:hover td {
+    @apply bg-soft-cloud;
+  }
+
+  .nav-link {
+    @apply text-ink hover:text-ink font-medium transition-colors px-3 py-2
+      hover:underline underline-offset-4 decoration-2;
+  }
+
+  .nav-link.active {
+    @apply text-ink underline underline-offset-4 decoration-2;
+  }
+
+  .sidebar-link {
+    @apply flex items-center gap-3 px-4 py-3 text-ink hover:bg-soft-cloud transition-all font-medium text-sm;
+  }
+
+  .sidebar-link.active {
+    @apply bg-soft-cloud text-ink font-bold border-l-4 border-ink;
+  }
+
+  /* Badges */
+  .badge-live {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold
+      bg-sale text-canvas;
+  }
+
+  .badge-upcoming {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold
+      bg-soft-cloud text-ink border border-hairline;
+  }
+
+  .badge-completed {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold
+      bg-canvas text-ink border border-hairline;
+  }
+
+  .badge-cancelled {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold
+      bg-soft-cloud text-zinc-500 border border-hairline;
+  }
+
+  .stat-card {
+    @apply bg-canvas border border-hairline p-5 flex flex-col gap-1 rounded-none;
+  }
+
+  .section-title {
+    @apply heading-xl text-ink mb-6 uppercase;
+    font-family: 'Bebas Neue', sans-serif;
+  }
+
+  .page-title {
+    @apply display-campaign text-ink mb-8;
+  }
+}
