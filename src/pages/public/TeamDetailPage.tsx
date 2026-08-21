@@ -83,35 +83,35 @@ export default function TeamDetailPage() {
 
   return (
     <PublicLayout>
-      <Link to="/teams" className="inline-flex items-center gap-2 text-zinc-400 hover:text-white text-sm mb-6 transition-colors">
+      <Link to="/teams" className="inline-flex items-center gap-2 text-zinc-500 hover:text-ink text-sm mb-6 transition-colors">
         <ArrowLeft size={16} /> All Teams
       </Link>
 
       {/* Team Header */}
       <div className="admin-card p-6 mb-6">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-          <div className="w-24 h-24 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center flex-shrink-0">
+          <div className="w-24 h-24 rounded-2xl bg-soft-cloud border border-hairline flex items-center justify-center flex-shrink-0">
             {team.logo_url ? (
               <img src={team.logo_url} alt={team.name} className="w-20 h-20 rounded-xl object-contain" />
             ) : (
-              <span className="text-3xl font-black text-white">{getInitials(team.name)}</span>
+              <span className="text-3xl font-black text-ink">{getInitials(team.name)}</span>
             )}
           </div>
           <div className="flex-1 text-center sm:text-left">
-            <h1 className="text-3xl font-black text-white mb-1">{team.name}</h1>
-            {team.college && <p className="text-zinc-400 mb-3">{team.college}</p>}
+            <h1 className="text-3xl font-black text-ink mb-1">{team.name}</h1>
+            {team.college && <p className="text-zinc-500 font-bold mb-3">{team.college}</p>}
             <div className="flex flex-wrap gap-4 justify-center sm:justify-start">
               <div className="text-center">
-                <p className="text-2xl font-bold text-emerald-400">{wins}</p>
-                <p className="text-xs text-zinc-500">Wins</p>
+                <p className="text-2xl font-bold text-emerald-600">{wins}</p>
+                <p className="text-xs text-zinc-500 font-bold">Wins</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-bold text-red-400">{losses}</p>
-                <p className="text-xs text-zinc-500">Losses</p>
+                <p className="text-2xl font-bold text-sale">{losses}</p>
+                <p className="text-xs text-zinc-500 font-bold">Losses</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-bold text-brand-400">{completedMatches.length}</p>
-                <p className="text-xs text-zinc-500">Played</p>
+                <p className="text-2xl font-bold text-brand-600">{completedMatches.length}</p>
+                <p className="text-xs text-zinc-500 font-bold">Played</p>
               </div>
             </div>
           </div>
@@ -121,8 +121,8 @@ export default function TeamDetailPage() {
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Roster */}
         <section>
-          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-            <Users size={18} className="text-brand-400" /> Roster ({players.length})
+          <h2 className="text-xl font-bold text-ink mb-4 flex items-center gap-2">
+            <Users size={18} className="text-brand-600" /> Roster ({players.length})
           </h2>
           <div className="admin-card overflow-hidden">
             {players.length === 0 ? <p className="text-zinc-500 p-5 text-center text-sm">No players added.</p> : (
@@ -132,18 +132,18 @@ export default function TeamDetailPage() {
                 </tr></thead>
                 <tbody>
                   {players.map(p => (
-                    <tr key={p.id} className={team.captain_player_id === p.id ? 'bg-yellow-900/10' : ''}>
-                      <td className="font-mono text-brand-400 font-bold">{p.jersey_number}</td>
+                    <tr key={p.id} className={team.captain_player_id === p.id ? 'bg-yellow-500/10' : ''}>
+                      <td className="font-mono text-brand-600 font-bold">{p.jersey_number}</td>
                       <td>
                         <div className="flex items-center gap-2">
-                          <span className="font-semibold text-white">{p.name}</span>
+                          <span className="font-semibold text-ink">{p.name}</span>
                           {team.captain_player_id === p.id && (
-                            <Shield size={12} className="text-yellow-400" />
+                            <Shield size={12} className="text-yellow-600" />
                           )}
                         </div>
                       </td>
-                      <td className="text-zinc-400 text-xs">{p.position || '—'}</td>
-                      <td className="font-bold text-brand-400">{stats[p.id]?.total_points ?? 0}</td>
+                      <td className="text-zinc-500 font-bold text-xs">{p.position || '—'}</td>
+                      <td className="font-bold text-brand-600">{stats[p.id]?.total_points ?? 0}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -154,8 +154,8 @@ export default function TeamDetailPage() {
 
         {/* Matches */}
         <section>
-          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-            <Trophy size={18} className="text-brand-400" /> Matches
+          <h2 className="text-xl font-bold text-ink mb-4 flex items-center gap-2">
+            <Trophy size={18} className="text-brand-600" /> Matches
           </h2>
           <div className="space-y-2">
             {matches.length === 0 ? (
@@ -170,9 +170,9 @@ export default function TeamDetailPage() {
                   <div key={match.id} className="admin-card flex items-center gap-3 py-3">
                     <span className="text-zinc-600 text-xs w-6">#{match.match_number}</span>
                     <div className="flex-1 text-sm">
-                      <span className="font-semibold text-white">{opponent?.name || 'TBD'}</span>
+                      <span className="font-semibold text-ink">{opponent?.name || 'TBD'}</span>
                       {isCompleted && (
-                        <span className={`ml-2 text-xs font-bold ${won ? 'text-emerald-400' : 'text-red-400'}`}>
+                        <span className={`ml-2 text-xs font-bold ${won ? 'text-emerald-600' : 'text-sale'}`}>
                           {myScore}–{oppScore}
                         </span>
                       )}
