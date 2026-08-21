@@ -147,15 +147,11 @@ export default function TournamentSettingsPage() {
         {/* Game Rules */}
         <section className="admin-card p-6 space-y-4">
           <h2 className="font-bold text-white text-base border-b border-zinc-800 pb-2">FIBA 3x3 Game Rules</h2>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3">
             <div>
               <label className="block text-sm font-medium text-zinc-300 mb-1">Match Duration (seconds)</label>
               <input type="number" value={form.match_duration_seconds ?? 600} onChange={e => set('match_duration_seconds', parseInt(e.target.value))} className="input-field" min={60} max={3600} />
               <p className="text-zinc-600 text-xs mt-1">{Math.floor((form.match_duration_seconds ?? 600) / 60)} minutes</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-1">Shot Clock (seconds)</label>
-              <input type="number" value={form.shot_clock_seconds ?? 12} onChange={e => set('shot_clock_seconds', parseInt(e.target.value))} className="input-field" min={5} max={30} />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">

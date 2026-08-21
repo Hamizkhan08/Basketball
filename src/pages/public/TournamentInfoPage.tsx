@@ -22,7 +22,6 @@ export default function TournamentInfoPage() {
 
   const rules = [
     { icon: Clock, label: 'Match Duration', value: `${Math.floor(tournament.match_duration_seconds / 60)} minutes` },
-    { icon: Target, label: 'Shot Clock', value: `${tournament.shot_clock_seconds} seconds` },
     { icon: Award, label: 'Winning Score', value: `${tournament.winning_score} points` },
     { icon: Trophy, label: 'Inside Arc', value: `${tournament.inside_arc_points} point(s)` },
     { icon: Trophy, label: 'Outside Arc', value: `${tournament.outside_arc_points} point(s)` },
