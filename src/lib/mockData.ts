@@ -148,14 +148,32 @@ export const MOCK_STANDINGS: Record<string, TeamStanding[]> = {
 const pts = (pid: string, total: number): PlayerTournamentStats => {
   const p = MOCK_PLAYERS.find(x => x.id === pid)!;
   const t = MOCK_TEAMS.find(x => x.id === p.team_id)!;
+  
+  const seed = pid.length + total;
+  let remaining = total;
+  
+  let p2 = 0;
+  if (remaining >= 2) {
+    p2 = (seed % (Math.floor(remaining / 2) + 1));
+    remaining -= p2 * 2;
+  }
+  
+  let ft = 0;
+  if (remaining >= 1) {
+    ft = ((seed * 7) % (remaining + 1));
+    remaining -= ft;
+  }
+  
+  let p1 = remaining;
+
   return {
     player: p,
     team: t,
     matches_played: 6,
     total_points: total,
-    one_point_scores: 0,
-    two_point_scores: 0,
-    free_throws: 0
+    one_point_scores: p1,
+    two_point_scores: p2,
+    free_throws: ft
   }
 }
 

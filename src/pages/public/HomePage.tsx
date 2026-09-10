@@ -9,6 +9,7 @@ import { useGameClock } from '@/hooks/useGameClock'
 import { supabase } from '@/lib/supabase'
 import type { Match, Team, Player, PlayerTournamentStats } from '@/lib/database.types'
 import { formatTime, formatDate, formatMatchTime, getInitials } from '@/lib/utils'
+import { USE_MOCK_DATA, MOCK_TEAMS, MOCK_MATCHES, MOCK_TOP_SCORERS, MOCK_STANDINGS } from '@/lib/mockData'
 
 // Live match score card
 function LiveMatchCard({ match, teamA, teamB }: { match: Match; teamA: Team; teamB: Team }) {
@@ -97,6 +98,31 @@ export default function HomePage() {
   useEffect(() => {
     async function fetchData() {
       if (!tournament) { setLoading(false); return }
+
+      if (USE_MOCK_DATA) {
+        const teamsMap = new Map<string, Team>(MOCK_TEAMS.map(t => [t.id, t]))
+        const buildMatchTuple = (m: Match) => ({
+          match: m,
+          teamA: teamsMap.get(m.team_a_id)!,
+          teamB: teamsMap.get(m.team_b_id)!,
+        })
+        
+        setLiveMatch(null)
+        setUpcomingMatches([])
+        setRecentMatches(MOCK_MATCHES.slice(-5).reverse().map(buildMatchTuple))
+        
+        setTopScorers(MOCK_TOP_SCORERS.slice(0, 3))
+        
+        const topTeamsData = MOCK_STANDINGS['A'].slice(0, 5).map(s => ({
+          team: s.team,
+          wins: s.wins,
+          losses: s.losses,
+          points: s.points_for
+        }))
+        setTopTeams(topTeamsData)
+        setLoading(false)
+        return
+      }
 
       const [liveRes, upcomingRes, recentRes] = await Promise.all([
         supabase.from('matches').select('*').eq('tournament_id', tournament.id).eq('status', 'live').limit(1).single(),
