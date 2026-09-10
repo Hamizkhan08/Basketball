@@ -32,7 +32,7 @@ export default function PlayersPage() {
     if (!tournament) { setLoading(false); return }
     if (USE_MOCK_DATA) {
       const teamMap = new Map(MOCK_TEAMS.map(t => [t.id, t]));
-      const statsMap = new Map(MOCK_TOP_SCORERS.map(s => [s.player_id, s]));
+      const statsMap = new Map(MOCK_TOP_SCORERS.map(s => [s.player.id, s]));
       const results: PlayerRow[] = MOCK_PLAYERS.map(p => {
         const stats = statsMap.get(p.id);
         return {

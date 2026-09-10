@@ -39,11 +39,10 @@ export default function TeamDetailPage() {
 
       const agg: Record<string, PlayerMatchStats & { matches_played: number }> = {};
       for (const p of playerList) {
-        const s = MOCK_TOP_SCORERS.find(x => x.player_id === p.id);
+        const s = MOCK_TOP_SCORERS.find(x => x.player.id === p.id);
         if (s) {
           agg[p.id] = {
-            id: 'mock', player_id: p.id, team_id: t.id, match_id: 'mock', tournament_id: 'mock',
-            created_at: new Date().toISOString(),
+            id: 'mock', player_id: p.id, team_id: t.id, match_id: 'mock',
             total_points: s.total_points,
             one_point_scores: s.one_point_scores,
             two_point_scores: s.two_point_scores,

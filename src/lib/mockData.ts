@@ -11,7 +11,8 @@ const t = (id: string, name: string, short: string, cid?: string): Team => ({
   logo_url: null,
   captain_player_id: cid || null,
   pool_name: 'A',
-  created_at: new Date().toISOString()
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString()
 })
 
 const p = (id: string, name: string, team_id: string, jn: number, pos: string): Player => ({
@@ -20,7 +21,9 @@ const p = (id: string, name: string, team_id: string, jn: number, pos: string): 
   name,
   jersey_number: jn,
   position: pos,
-  created_at: new Date().toISOString()
+  photo_url: null,
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString()
 })
 
 export const MOCK_TEAMS: Team[] = [
@@ -79,17 +82,26 @@ const m = (num: number, ta: string, tb: string, sa: number, sb: number): Match =
   id: `m-${num}`,
   tournament_id: 'mock-tourney',
   match_number: num,
-  round_name: 'League',
+  round: 'League',
   team_a_id: ta,
   team_b_id: tb,
   status: 'completed',
   team_a_score: sa,
   team_b_score: sb,
   winner_team_id: sa > sb ? ta : (sb > sa ? tb : null),
-  court_name: 'Main Court',
+  court: 'Main Court',
   scheduled_date: '2026-09-10',
   scheduled_time: '10:00',
-  created_at: new Date().toISOString()
+  is_overtime: false,
+  game_clock_seconds: 600,
+  shot_clock_seconds: 12,
+  game_clock_running: false,
+  shot_clock_running: false,
+  last_clock_update: null,
+  started_at: null,
+  ended_at: null,
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString()
 })
 
 export const MOCK_MATCHES: Match[] = [
@@ -137,9 +149,8 @@ const pts = (pid: string, total: number): PlayerTournamentStats => {
   const p = MOCK_PLAYERS.find(x => x.id === pid)!;
   const t = MOCK_TEAMS.find(x => x.id === p.team_id)!;
   return {
-    player_id: pid,
-    player_name: p.name,
-    team_name: t.name,
+    player: p,
+    team: t,
     matches_played: 6,
     total_points: total,
     one_point_scores: 0,
