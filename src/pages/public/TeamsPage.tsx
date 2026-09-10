@@ -8,6 +8,7 @@ import { supabase } from '@/lib/supabase'
 import { useTournament } from '@/hooks/useTournament'
 import type { Team, Player, TeamMatchStats } from '@/lib/database.types'
 import { getInitials } from '@/lib/utils'
+import { USE_MOCK_DATA, MOCK_TEAMS, MOCK_PLAYERS, MOCK_STANDINGS } from '@/lib/mockData'
 
 interface TeamCard {
   team: Team
@@ -25,6 +26,25 @@ export default function TeamsPage() {
 
   useEffect(() => {
     if (!tournament) { setLoading(false); return }
+    if (USE_MOCK_DATA) {
+      const results: TeamCard[] = MOCK_TEAMS.map(team => {
+        const teamPlayers = MOCK_PLAYERS.filter(p => p.team_id === team.id);
+        const captain = teamPlayers.find(p => p.id === team.captain_player_id) || null;
+        const standing = MOCK_STANDINGS['A'].find(s => s.team.id === team.id)!;
+        return {
+          team,
+          captain,
+          playerCount: teamPlayers.length,
+          wins: standing.wins,
+          losses: standing.losses,
+          points: standing.points_for
+        }
+      });
+      setTeams(results);
+      setLoading(false);
+      return;
+    }
+
     async function fetchTeams() {
       const { data: teamsData } = await supabase
         .from('teams')

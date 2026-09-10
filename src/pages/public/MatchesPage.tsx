@@ -10,6 +10,7 @@ import { useTournament } from '@/hooks/useTournament'
 import type { Match, Team } from '@/lib/database.types'
 import { formatDate, formatMatchTime, getInitials } from '@/lib/utils'
 import { MATCH_STATUS_LABELS } from '@/lib/constants'
+import { USE_MOCK_DATA, MOCK_MATCHES, MOCK_TEAMS } from '@/lib/mockData'
 
 type Filter = 'all' | 'scheduled' | 'live' | 'completed' | 'cancelled'
 
@@ -23,6 +24,17 @@ export default function MatchesPage() {
 
   useEffect(() => {
     if (!tournament) { setLoading(false); return }
+    if (USE_MOCK_DATA) {
+      const tMap = new Map(MOCK_TEAMS.map(t => [t.id, t]))
+      setMatchData(MOCK_MATCHES.map(m => ({
+        match: m,
+        teamA: tMap.get(m.team_a_id)!,
+        teamB: tMap.get(m.team_b_id)!
+      })))
+      setLoading(false)
+      return
+    }
+
     async function fetchMatches() {
       const { data: matchesData } = await supabase
         .from('matches')
@@ -45,6 +57,8 @@ export default function MatchesPage() {
       setLoading(false)
     }
     fetchMatches()
+
+    if (USE_MOCK_DATA) return;
 
     const ch = supabase.channel(`matches_rt_${Math.random().toString(36).substring(2)}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'matches' }, () => fetchMatches())

@@ -7,6 +7,7 @@ import { PageSpinner } from '@/components/ui/Spinner'
 import { supabase } from '@/lib/supabase'
 import type { Team, Player, Match, PlayerMatchStats } from '@/lib/database.types'
 import { getInitials, formatDate, formatMatchTime } from '@/lib/utils'
+import { USE_MOCK_DATA, MOCK_TEAMS, MOCK_PLAYERS, MOCK_MATCHES, MOCK_TOP_SCORERS } from '@/lib/mockData'
 
 export default function TeamDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -18,6 +19,44 @@ export default function TeamDetailPage() {
 
   useEffect(() => {
     if (!id) return
+    if (USE_MOCK_DATA) {
+      const t = MOCK_TEAMS.find(x => x.id === id);
+      if (!t) { setLoading(false); return; }
+      setTeam(t);
+      const playerList = MOCK_PLAYERS.filter(p => p.team_id === id);
+      setPlayers(playerList);
+
+      const allMatches = [
+        ...MOCK_MATCHES.filter(m => m.team_a_id === id).map(m => ({ match: m, isTeamA: true })),
+        ...MOCK_MATCHES.filter(m => m.team_b_id === id).map(m => ({ match: m, isTeamA: false }))
+      ];
+      const oppMap = new Map<string, Team>(MOCK_TEAMS.map(x => [x.id, x]));
+      setMatches(allMatches.map(({ match, isTeamA }) => ({
+        match,
+        isTeamA,
+        opponent: oppMap.get(isTeamA ? match.team_b_id : match.team_a_id)!,
+      })));
+
+      const agg: Record<string, PlayerMatchStats & { matches_played: number }> = {};
+      for (const p of playerList) {
+        const s = MOCK_TOP_SCORERS.find(x => x.player_id === p.id);
+        if (s) {
+          agg[p.id] = {
+            id: 'mock', player_id: p.id, team_id: t.id, match_id: 'mock', tournament_id: 'mock',
+            created_at: new Date().toISOString(),
+            total_points: s.total_points,
+            one_point_scores: s.one_point_scores,
+            two_point_scores: s.two_point_scores,
+            free_throws: s.free_throws,
+            matches_played: s.matches_played
+          }
+        }
+      }
+      setStats(agg);
+      setLoading(false);
+      return;
+    }
+
     async function fetchData() {
       const [teamRes, playersRes] = await Promise.all([
         supabase.from('teams').select('*').eq('id', id).single(),

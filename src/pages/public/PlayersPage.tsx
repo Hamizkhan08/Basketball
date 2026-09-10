@@ -7,6 +7,7 @@ import { useTournament } from '@/hooks/useTournament'
 import type { Player, Team, PlayerMatchStats } from '@/lib/database.types'
 import { getInitials } from '@/lib/utils'
 import { User, ChevronUp, ChevronDown } from 'lucide-react'
+import { USE_MOCK_DATA, MOCK_PLAYERS, MOCK_TEAMS, MOCK_TOP_SCORERS } from '@/lib/mockData'
 
 type SortKey = 'total_points' | 'two_point_scores' | 'one_point_scores' | 'free_throws' | 'matches_played'
 
@@ -29,6 +30,26 @@ export default function PlayersPage() {
 
   useEffect(() => {
     if (!tournament) { setLoading(false); return }
+    if (USE_MOCK_DATA) {
+      const teamMap = new Map(MOCK_TEAMS.map(t => [t.id, t]));
+      const statsMap = new Map(MOCK_TOP_SCORERS.map(s => [s.player_id, s]));
+      const results: PlayerRow[] = MOCK_PLAYERS.map(p => {
+        const stats = statsMap.get(p.id);
+        return {
+          player: p,
+          team: teamMap.get(p.team_id)!,
+          total_points: stats?.total_points || 0,
+          one_point_scores: stats?.one_point_scores || 0,
+          two_point_scores: stats?.two_point_scores || 0,
+          free_throws: stats?.free_throws || 0,
+          matches_played: stats?.matches_played || 0
+        };
+      });
+      setRows(results);
+      setLoading(false);
+      return;
+    }
+
     async function fetchData() {
       const { data: teamsData } = await supabase.from('teams').select('*').eq('tournament_id', tournament!.id)
       const teams = (teamsData as Team[]) ?? []

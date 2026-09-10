@@ -8,6 +8,7 @@ import { useTournament } from '@/hooks/useTournament'
 import type { Player, Team, PlayerMatchStats } from '@/lib/database.types'
 import type { PlayerTournamentStats } from '@/lib/database.types'
 import { getInitials } from '@/lib/utils'
+import { USE_MOCK_DATA, MOCK_TOP_SCORERS } from '@/lib/mockData'
 
 export default function BestShootersPage() {
   const { tournament } = useTournament()
@@ -16,6 +17,12 @@ export default function BestShootersPage() {
 
   useEffect(() => {
     if (!tournament) { setLoading(false); return }
+    if (USE_MOCK_DATA) {
+      setShooters(MOCK_TOP_SCORERS)
+      setLoading(false)
+      return
+    }
+
     async function fetchData() {
       const { data: teamsData } = await supabase.from('teams').select('*').eq('tournament_id', tournament!.id)
       const teams = (teamsData as Team[]) ?? []
@@ -59,6 +66,8 @@ export default function BestShootersPage() {
       setLoading(false)
     }
     fetchData()
+
+    if (USE_MOCK_DATA) return;
 
     const ch = supabase.channel(`shooters_rt_${Math.random().toString(36).substring(2)}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'player_match_stats' }, () => fetchData())

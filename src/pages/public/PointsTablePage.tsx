@@ -7,6 +7,7 @@ import { useTournament } from '@/hooks/useTournament'
 import type { Team, TeamMatchStats } from '@/lib/database.types'
 import type { TeamStanding } from '@/lib/database.types'
 import { Trophy } from 'lucide-react'
+import { USE_MOCK_DATA, MOCK_STANDINGS } from '@/lib/mockData'
 
 export default function PointsTablePage() {
   const { tournament } = useTournament()
@@ -15,6 +16,12 @@ export default function PointsTablePage() {
 
   useEffect(() => {
     if (!tournament) { setLoading(false); return }
+    if (USE_MOCK_DATA) {
+      setPools(MOCK_STANDINGS)
+      setLoading(false)
+      return
+    }
+
     async function fetchStandings() {
       const { data: teamsData } = await supabase.from('teams').select('*').eq('tournament_id', tournament!.id)
       const teams = (teamsData as Team[]) ?? []
@@ -73,6 +80,8 @@ export default function PointsTablePage() {
       setLoading(false)
     }
     fetchStandings()
+
+    if (USE_MOCK_DATA) return;
 
     const ch = supabase.channel(`standings_rt_${Math.random().toString(36).substring(2)}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'team_match_stats' }, () => fetchStandings())
